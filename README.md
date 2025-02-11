@@ -1,40 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# 🖼️ Axome Image Optimizer
 
-## Getting Started
+Une application web moderne et élégante pour optimiser vos images en toute simplicité.
 
-First, run the development server:
+## ✨ Fonctionnalités
+
+- 🎯 **Optimisation intelligente** : Conversion et compression d'images avec un contrôle précis sur la qualité
+- 🔄 **Formats supportés** :
+  - WebP (recommandé pour le web)
+  - AVIF (compression maximale)
+  - JPEG (compatibilité universelle)
+  - PNG (qualité sans perte)
+- 📱 **Interface responsive** : Fonctionne parfaitement sur mobile et desktop
+- 🎨 **Thème clair/sombre** : Interface adaptative pour un confort visuel optimal
+- 💾 **Préréglages personnalisables** : Sauvegardez vos configurations préférées
+- 🔍 **Aperçu en direct** : Comparaison avant/après avec zoom
+- ⌨️ **Raccourcis clavier** :
+  - `Ctrl/Cmd + Enter` : Télécharger
+  - `Ctrl/Cmd + A` : Appliquer les dimensions
+  - `Ctrl/Cmd + B` : Toggle sidebar
+  - `Echap` : Fermer les modales
+
+## 🚀 Utilisation
+
+1. **Glissez-déposez** vos images ou cliquez pour les sélectionner
+2. Choisissez vos paramètres :
+   - Format de sortie
+   - Qualité de compression
+   - Dimensions (optionnel)
+3. Utilisez les préréglages ou créez les vôtres
+4. Téléchargez vos images optimisées !
+
+## 💡 Conseils d'optimisation
+
+- **WebP** : Format moderne idéal pour le web, excellent compromis qualité/poids
+- **AVIF** : Meilleure compression, parfait pour les applications modernes
+- **JPEG** : Choix sûr pour les photos, compatible partout
+- **PNG** : Idéal pour les logos et images avec transparence
+
+## 🛠️ Spécifications techniques
+
+- **Taille maximale** : 10MB par fichier
+- **Traitement** : Optimisation côté serveur
+- **Sécurité** : Aucune donnée n'est stockée
+- **Performance** : Traitement asynchrone pour une expérience fluide
+
+## 💻 Stack Technique
+
+- **[Next.js](https://nextjs.org/)** : Framework React pour une application performante et SEO-friendly
+- **[Tailwind CSS](https://tailwindcss.com/)** : Framework CSS utilitaire pour un design moderne et responsive
+- **API Routes** : Traitement des images côté serveur via les API routes de Next.js
+- **TypeScript** : Typage statique pour un code plus robuste
+- **LocalStorage** : Persistance des préférences utilisateur
+
+### Installation et développement
 
 ```bash
+# Cloner le projet
+git clone https://github.com/axome/image-optimizer.git
+
+# Installer les dépendances
+npm install
+
+# Lancer le serveur de développement
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+L'application sera disponible sur [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## 🎯 Cas d'utilisation
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- 🌐 Optimisation d'images pour sites web
+- 📱 Adaptation pour applications mobiles
+- 🖼️ Création de miniatures
+- 📸 Compression de photos
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+## 🔒 Vie privée
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Aucune image n'est stockée sur nos serveurs
+- Traitement local et sécurisé
+- Aucune donnée personnelle collectée
 
-## Learn More
+## 🤝 Contribution
 
-To learn more about Next.js, take a look at the following resources:
+Les contributions sont les bienvenues ! N'hésitez pas à :
+- Signaler des bugs
+- Proposer des fonctionnalités
+- Améliorer la documentation
+- Soumettre des pull requests
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+## 📝 Licence
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+MIT License - Utilisez, modifiez et partagez librement !
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+Développé avec ❤️ par l'équipe Axome

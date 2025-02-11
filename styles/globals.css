@@ -20,6 +20,7 @@
   --surface-tertiary: #f9fafb;
   --ring: rgba(99, 102, 241, 0.2);
   --scrollbar: #E5E7EB;
+  --range-track: #e5e7eb;
 }
 
 /* Thème sombre */
@@ -34,6 +35,7 @@
   --surface-tertiary: #0f172a;
   --ring: rgba(99, 102, 241, 0.1);
   --scrollbar: #4B5563;
+  --range-track: #334155;
 }
 
 /* Styles de base */
@@ -112,4 +114,60 @@ body {
 
 .ring-theme {
   --tw-ring-color: var(--ring);
+}
+
+/* Personnalisation de l'input range */
+input[type="range"] {
+  -webkit-appearance: none;
+  height: 8px;
+  background: var(--range-track);
+  border-radius: 9999px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  margin-top: -4px;
+}
+
+input[type="range"]::-moz-range-thumb {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  border: none;
+}
+
+input[type="range"]::-ms-thumb {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  background: var(--range-track);
+  border-radius: 9999px;
+  height: 8px;
+}
+
+input[type="range"]::-moz-range-track {
+  background: var(--range-track);
+  border-radius: 9999px;
+  height: 8px;
+}
+
+input[type="range"]::-ms-track {
+  background: var(--range-track);
+  border-radius: 9999px;
+  height: 8px;
 }

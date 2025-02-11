@@ -7,6 +7,7 @@ import { usePresets } from '../hooks/usePresets';
 import { PresetManager } from '../components/PresetManager';
 import { ThemeSwitch } from '../components/ThemeSwitch';
 import { Button } from '../components/Button';
+import { SidebarToggle } from '../components/SidebarToggle';
 
 const geist = Geist({
   variable: "--font-geist-sans",
@@ -148,7 +149,7 @@ const selectWrapperClassName = "relative";
   input[type="range"] {
     -webkit-appearance: none;
     height: 8px;
-    background: var(--primary);
+    background: var(--surface);
     border-radius: 9999px;
     background-image: none;
   }
@@ -158,7 +159,7 @@ const selectWrapperClassName = "relative";
     height: 16px;
     width: 16px;
     border-radius: 50%;
-    background: white;
+    background: var(--primary);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     margin-top: -4px;
@@ -168,7 +169,7 @@ const selectWrapperClassName = "relative";
     height: 16px;
     width: 16px;
     border-radius: 50%;
-    background: white;
+    background: var(--primary);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     border: none;
@@ -178,24 +179,9 @@ const selectWrapperClassName = "relative";
     height: 16px;
     width: 16px;
     border-radius: 50%;
-    background: white;
+    background: var(--primary);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-  }
-
-  .dark input[type="range"]::-webkit-slider-thumb {
-    background: var(--secondary);
-    border: 2px solid var(--primary);
-  }
-
-  .dark input[type="range"]::-moz-range-thumb {
-    background: var(--secondary);
-    border: 2px solid var(--primary);
-  }
-
-  .dark input[type="range"]::-ms-thumb {
-    background: var(--secondary);
-    border: 2px solid var(--primary);
   }
 `}</style>
 
@@ -212,6 +198,22 @@ export default function Home() {
   const [editingPreset, setEditingPreset] = useState<string | null>(null);
   const [newPresetName, setNewPresetName] = useState('');
   const [showPresetsManager, setShowPresetsManager] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  useEffect(() => {
+    // Récupérer l'état initial depuis le localStorage
+    const saved = localStorage.getItem('sidebarOpen');
+    if (saved !== null) {
+      setIsSidebarOpen(JSON.parse(saved));
+    }
+  }, []); // S'exécute une seule fois au montage
+
+  useEffect(() => {
+    // Sauvegarder dans le localStorage à chaque changement
+    localStorage.setItem('sidebarOpen', JSON.stringify(isSidebarOpen));
+  }, [isSidebarOpen]);
+
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   const optimizeImage = async (file: File, id: string) => {
     try {
@@ -430,17 +432,40 @@ export default function Home() {
         e.preventDefault();
         applyDimensions();
       }
+      if (e.key === 'b' && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        toggleSidebar();
+      }
     };
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, []);
+  }, [toggleSidebar]);
 
   return (
     <div className={`${geist.variable} min-h-screen bg-background`}>
+      <button
+        onClick={toggleSidebar}
+        className="fixed top-6 right-6 z-[60] p-2 bg-background border border-default rounded-xl hover:bg-surface transition-colors"
+        aria-label={isSidebarOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+        title={`${isSidebarOpen ? 'Fermer' : 'Ouvrir'} le menu (Ctrl/Cmd + B)`}
+      >
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          {isSidebarOpen ? (
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          ) : (
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          )}
+        </svg>
+      </button>
+      
       <div className="flex">
         {/* Sidebar */}
-        <div className="hidden lg:block w-96 fixed top-0 bottom-0 border-r border-default bg-background">
+        <div 
+          className={`${
+            isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          } fixed top-0 bottom-0 w-96 border-r border-default bg-background transition-transform duration-300 ease-in-out z-50`}
+        >
           <div className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-border">
             <div className="p-6 space-y-6">
               <ThemeSwitch />
@@ -477,6 +502,10 @@ export default function Home() {
                     <span>Appliquer dimensions</span>
                   </div>
                   <div className="flex justify-between">
+                    <span>Ctrl/Cmd + B</span>
+                    <span>Toggle sidebar</span>
+                  </div>
+                  <div className="flex justify-between">
                     <span>Echap</span>
                     <span>Fermer modal</span>
                   </div>
@@ -495,8 +524,12 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Contenu principal */}
-        <div className="flex-1 lg:ml-96">
+        {/* Main content */}
+        <div 
+          className={`flex-1 min-h-screen transition-[margin] duration-300 ease-in-out ${
+            isSidebarOpen ? 'lg:ml-96' : 'lg:ml-0'
+          } w-full relative z-0`}
+        >
           <div className="max-w-6xl mx-auto p-8">
             <h1 className="text-3xl font-bold mb-8 text-center text-text">
               Optimiseur d'images
@@ -542,7 +575,7 @@ export default function Home() {
                             type="range"
                             min="1"
                             max="100"
-                            className="w-full h-2 bg-surface rounded-full appearance-none cursor-pointer accent-primary"
+                            className="w-full cursor-pointer"
                             value={settings.quality}
                             onChange={(e) => updateSettings({ quality: Number(e.target.value) })}
                           />

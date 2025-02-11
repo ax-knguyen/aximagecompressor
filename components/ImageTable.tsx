@@ -59,26 +59,26 @@ export default function ImageTable({ images, onDelete, onClearAll, settings }: I
           )}
         </div>
 
-        <div className="bg-surface rounded-2xl shadow-lg overflow-hidden">
+        <div className="bg-surface rounded-2xl shadow-lg overflow-hidden overflow-x-auto">
           <table className="w-full divide-y divide-border">
             <thead className="bg-surface-secondary">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-text-light uppercase tracking-wider">
                   Fichier
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-text-light uppercase tracking-wider">
+                <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-text-light uppercase tracking-wider">
                   Taille originale
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-text-light uppercase tracking-wider">
+                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-text-light uppercase tracking-wider">
                   Taille optimisée
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-text-light uppercase tracking-wider">
+                <th className="hidden lg:table-cell px-6 py-3 text-left text-xs font-medium text-text-light uppercase tracking-wider">
                   Réduction
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-text-light uppercase tracking-wider">
                   Aperçu
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-text-light uppercase tracking-wider">
+                <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-text-light uppercase tracking-wider">
                   Status
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-text-light uppercase tracking-wider">
@@ -92,13 +92,13 @@ export default function ImageTable({ images, onDelete, onClearAll, settings }: I
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <span title={image.name}>{truncateFileName(image.name)}</span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                  <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm">
                     {(image.originalSize / 1024).toFixed(2)} KB
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                  <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm">
                     {image.optimizedSize ? `${(image.optimizedSize / 1024).toFixed(2)} KB` : '-'}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                  <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm">
                     {image.optimizedSize
                       ? `${(((image.originalSize - image.optimizedSize) / image.originalSize) * 100).toFixed(1)}%`
                       : '-'}
@@ -127,7 +127,7 @@ export default function ImageTable({ images, onDelete, onClearAll, settings }: I
                       <div className="h-12 w-12 bg-gray-100 dark:bg-gray-700 rounded" />
                     )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                  <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm">
                     {image.status === 'processing' && (
                       <span className="text-primary flex items-center gap-2">
                         <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
@@ -145,15 +145,38 @@ export default function ImageTable({ images, onDelete, onClearAll, settings }: I
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <button
-                      onClick={() => onDelete(image.id)}
-                      className="text-gray-400 hover:text-red-500 transition-colors"
-                      title="Supprimer"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                      </svg>
-                    </button>
+                    <div className="flex gap-2">
+                      {image.status === 'completed' && (
+                        <button
+                          onClick={() => {
+                            const link = document.createElement('a');
+                            link.href = `data:image/${settings.format};base64,${image.optimizedImage}`;
+                            link.download = `${image.name.split('.')[0]}.${settings.format}`;
+                            link.click();
+                          }}
+                          className="text-primary hover:text-primary-dark transition-colors"
+                          title="Télécharger"
+                        >
+                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path 
+                              strokeLinecap="round" 
+                              strokeLinejoin="round" 
+                              strokeWidth={2} 
+                              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" 
+                            />
+                          </svg>
+                        </button>
+                      )}
+                      <button
+                        onClick={() => onDelete(image.id)}
+                        className="text-text-light hover:text-red-500 transition-colors"
+                        title="Supprimer"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -161,10 +184,10 @@ export default function ImageTable({ images, onDelete, onClearAll, settings }: I
             {images.length > 1 && (
               <tfoot className="bg-surface-secondary">
                 <tr>
-                  <td colSpan={3} className="px-6 py-4 text-sm font-medium text-text">
+                  <td colSpan={3} className="hidden md:table-cell px-6 py-4 text-sm font-medium text-text">
                     Taille totale
                   </td>
-                  <td className="px-6 py-4 text-sm">
+                  <td className="hidden md:table-cell px-6 py-4 text-sm">
                     {(images.reduce((acc, img) => acc + img.originalSize, 0) / 1024 / 1024).toFixed(2)} MB →{' '}
                     {(images.reduce((acc, img) => acc + (img.optimizedSize || 0), 0) / 1024 / 1024).toFixed(2)} MB
                   </td>

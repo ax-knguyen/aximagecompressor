@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
 import { ZoomView } from './ZoomView';
 
@@ -158,10 +159,11 @@ export function ImageComparison({
                 }}
               >
                 {/* Image optimisée (arrière-plan) */}
-                <img 
+                <Image 
                   src={optimized}
                   alt="Optimisé"
                   className="absolute inset-0 w-full h-full object-contain"
+                  fill
                 />
                 
                 {/* Image originale (premier plan, coupée par le slider) */}
@@ -169,10 +171,11 @@ export function ImageComparison({
                   className="absolute inset-0 overflow-hidden"
                   style={{ width: `${sliderPosition}%` }}
                 >
-                  <img 
+                  <Image 
                     src={original}
                     alt="Original"
                     className="absolute inset-0 w-full h-full object-contain"
+                    fill
                   />
                 </div>
 

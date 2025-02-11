@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import type { ImageSettings } from '../types/settings';
+import type { ImageInfo } from '../types/image';
 
 interface OptimizationRecord {
   date: string;

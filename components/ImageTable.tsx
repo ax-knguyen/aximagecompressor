@@ -1,20 +1,7 @@
 import React, { useState } from 'react';
 import { ImagePreview } from './ImagePreview';
 import { ImageComparison } from './ImageComparison';
-
-interface ImageInfo {
-  id: string;
-  name: string;
-  originalSize: number;
-  optimizedSize: number;
-  status: 'processing' | 'completed' | 'error';
-  optimizedImage?: string;
-  originalImage?: string;
-  dimensions?: {
-    width: number;
-    height: number;
-  };
-}
+import type { ImageInfo } from '../types/image';
 
 interface ImageTableProps {
   images: ImageInfo[];
@@ -109,7 +96,6 @@ export default function ImageTable({ images, onDelete, onClearAll, settings }: I
                         <ImagePreview 
                           original={`data:image/*;base64,${image.originalImage}`}
                           optimized={`data:image/${settings.format};base64,${image.optimizedImage}`}
-                          format={settings.format}
                           showSideBySide={selectedImage === image.id}
                         />
                         <button

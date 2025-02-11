@@ -1,10 +1,10 @@
 import React from 'react';
-import type { Preset } from '../hooks/usePresets';
+import type { Preset } from '../types/preset';
 
 interface PresetManagerProps {
   customPresets: Record<string, Preset>;
-  onEdit: (presetId: string) => void;
-  onDelete: (presetId: string) => void;
+  onEdit: (id: string) => void;
+  onDelete: (id: string) => void;
   onClose: () => void;
 }
 

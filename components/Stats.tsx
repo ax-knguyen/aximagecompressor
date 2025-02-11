@@ -1,3 +1,5 @@
+import type { ImageInfo } from '../types/image';
+
 interface StatsProps {
   images: ImageInfo[];
 }

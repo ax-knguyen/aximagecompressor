@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import { useTheme } from 'next-themes';
 
 type Theme = 'light' | 'dark' | 'system';
 
 export function ThemeSwitch() {
-  const [theme, setTheme] = useState<Theme>('system');
+  const { theme, setTheme } = useTheme();
 
   // Effet pour initialiser le thème au chargement
   useEffect(() => {
-    // Récupérer le thème depuis le localStorage
-    const savedTheme = localStorage.getItem('theme') as Theme;
-    
-    if (savedTheme) {
-      // Si un thème est sauvegardé, l'utiliser
-      setTheme(savedTheme);
-      applyTheme(savedTheme);
+    const saved = localStorage.getItem('theme') as Theme;
+    if (saved) {
+      setTheme(saved);
+      applyTheme(saved);
     } else {
       // Sinon, utiliser le thème système par défaut
       const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
@@ -21,7 +19,7 @@ export function ThemeSwitch() {
       applyTheme('system');
       localStorage.setItem('theme', 'system');
     }
-  }, []);
+  }, [setTheme]);
 
   // Effet pour gérer les changements de thème système
   useEffect(() => {

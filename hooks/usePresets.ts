@@ -1,12 +1,8 @@
 import { useState, useEffect } from 'react';
+import type { Preset, PresetRecord } from '../types/preset';
 
-interface Preset {
+interface PresetWithId extends Preset {
   id: string;
-  name: string;
-  format: 'webp' | 'avif' | 'jpeg' | 'png';
-  quality: number;
-  width?: number;
-  height?: number;
 }
 
 const defaultPresets = {
@@ -37,7 +33,7 @@ const defaultPresets = {
 } as const;
 
 export function usePresets() {
-  const [customPresets, setCustomPresets] = useState<Record<string, Preset>>({});
+  const [customPresets, setCustomPresets] = useState<PresetRecord>({});
 
   // Charger les préréglages personnalisés au démarrage
   useEffect(() => {
@@ -87,6 +83,6 @@ export function usePresets() {
     savePreset,
     deletePreset,
     editPreset,
-    allPresets: { ...defaultPresets, ...customPresets }
+    allPresets: { ...defaultPresets, ...customPresets } as PresetRecord
   };
 } 

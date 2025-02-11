@@ -9,8 +9,6 @@ interface ZoomViewProps {
 
 export function ZoomView({ original, optimized, position, sliderPosition }: ZoomViewProps) {
   const zoomFactor = 3;
-  const zoomSize = 200;
-  const halfZoomSize = zoomSize / 2;
 
   return (
     <div 

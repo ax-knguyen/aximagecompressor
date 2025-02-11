@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
+import Image from 'next/image';
+import React from 'react';
 
 interface ImagePreviewProps {
   original: string;
   optimized: string;
-  format: 'webp' | 'avif' | 'jpeg' | 'png';
   showSideBySide?: boolean;
 }
 
-export function ImagePreview({ original, optimized, format, showSideBySide }: ImagePreviewProps) {
-  const [showOriginal, setShowOriginal] = useState(false);
-
+export function ImagePreview({ original, optimized, showSideBySide }: ImagePreviewProps) {
   return (
     <div className="relative group">
       <div className="w-16 h-16 rounded-xl overflow-hidden bg-background shadow-md">
-        <img
+        <Image
           src={optimized}
           alt="Aperçu"
           className="w-full h-full object-cover"
+          width={64}
+          height={64}
         />
       </div>
       
@@ -26,15 +26,21 @@ export function ImagePreview({ original, optimized, format, showSideBySide }: Im
             <div className="flex">
               <div className="w-1/2 border-r border-default">
                 <div className="p-1 text-xs text-center text-text-light bg-surface">Original</div>
-                <img src={original} alt="Original" className="w-full" />
+                <Image src={original} alt="Original" className="w-full" width={200} height={200} />
               </div>
               <div className="w-1/2">
                 <div className="p-1 text-xs text-center text-text-light bg-surface">Optimisé</div>
-                <img src={optimized} alt="Optimisé" className="w-full" />
+                <Image src={optimized} alt="Optimisé" className="w-full" width={200} height={200} />
               </div>
             </div>
           ) : (
-            <img src={optimized} alt="Aperçu" className="w-full" />
+            <Image
+              src={optimized}
+              alt="Aperçu"
+              className="w-full"
+              width={64}
+              height={64}
+            />
           )}
         </div>
       </div>

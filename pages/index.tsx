@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import DropZone from '../components/DropZone';
 import ImageTable from '../components/ImageTable';
 import { Geist } from "next/font/google";
@@ -7,19 +7,12 @@ import { usePresets } from '../hooks/usePresets';
 import { PresetManager } from '../components/PresetManager';
 import { ThemeSwitch } from '../components/ThemeSwitch';
 import { Button } from '../components/Button';
-import { SidebarToggle } from '../components/SidebarToggle';
+import type { ImageSettings } from '../types/settings';
 
 const geist = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
-
-interface ImageSettings {
-  format: 'webp' | 'avif' | 'jpeg' | 'png';
-  width?: number;
-  height?: number;
-  quality: number;
-}
 
 interface ImageInfo {
   id: string;
@@ -31,12 +24,6 @@ interface ImageInfo {
   errorMessage?: string;
   originalImage?: string;
 }
-
-const presets = {
-  web: { format: 'webp', quality: 80, width: 1920 },
-  thumbnail: { format: 'webp', quality: 60, width: 300 },
-  mobile: { format: 'webp', quality: 75, width: 828 },
-};
 
 const formatInfo = {
   webp: {
@@ -213,9 +200,9 @@ export default function Home() {
     localStorage.setItem('sidebarOpen', JSON.stringify(isSidebarOpen));
   }, [isSidebarOpen]);
 
-  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+  const toggleSidebar = useCallback(() => setIsSidebarOpen(prev => !prev), []);
 
-  const optimizeImage = async (file: File, id: string) => {
+  const optimizeImage = useCallback(async (file: File, id: string) => {
     try {
       const base64 = await new Promise<string>((resolve) => {
         const reader = new FileReader();
@@ -262,7 +249,7 @@ export default function Home() {
       ));
       throw error;
     }
-  };
+  }, [settings, setImages]);
 
   const handleFilesDrop = async (files: File[]) => {
     setOriginalFiles(files);
@@ -302,7 +289,7 @@ export default function Home() {
     }
   };
 
-  const applyDimensions = async () => {
+  const applyDimensions = useCallback(async () => {
     if (originalFiles.length === 0) return;
 
     const imagesToProcess = images.map(img => ({
@@ -320,9 +307,9 @@ export default function Home() {
         }
       }
     } catch (error) {
-      console.error('Erreur lors de l\'application des dimensions:', error);
+      console.error("Erreur lors de l&apos;application des dimensions:", error);
     }
-  };
+  }, [originalFiles, images, optimizeImage, setImages]);
 
   const updateSettings = (newSettings: Partial<ImageSettings>) => {
     setSettings(prev => ({
@@ -331,7 +318,7 @@ export default function Home() {
     }));
   };
 
-  const handleDownload = async () => {
+  const handleDownload = useCallback(async () => {
     if (images.length === 0) return;
 
     const zip = new JSZip();
@@ -387,7 +374,7 @@ export default function Home() {
       link.download = 'images-optimisees.zip';
       link.click();
     }
-  };
+  }, [images, settings, settings.format]);
 
   const handleDelete = (id: string) => {
     setImages(prev => prev.filter(img => img.id !== id));
@@ -440,7 +427,7 @@ export default function Home() {
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [toggleSidebar]);
+  }, [toggleSidebar, handleDownload, applyDimensions]);
 
   return (
     <div className={`${geist.variable} min-h-screen bg-background`}>
@@ -553,7 +540,7 @@ export default function Home() {
                         <select
                           className={selectClassName}
                           value={settings.format}
-                          onChange={(e) => updateSettings({ format: e.target.value as any })}
+                          onChange={(e) => updateSettings({ format: e.target.value as 'webp' | 'avif' | 'jpeg' | 'png' })}
                         >
                           {Object.entries(formatInfo).map(([key, info]) => (
                             <option key={key} value={key}>{info.name}</option>
@@ -640,8 +627,8 @@ export default function Home() {
                         <div className="flex-1">
                           <select
                             className={selectClassName}
-                            onChange={(e) => {
-                              const preset = allPresets[e.target.value];
+                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                              const preset = allPresets[e.target.value as keyof typeof allPresets];
                               if (preset) {
                                 setSettings(prev => ({
                                   ...prev,
@@ -749,7 +736,7 @@ export default function Home() {
                     className="px-6 py-3 bg-primary hover:bg-primary-dark text-white rounded-xl transition-colors shadow-lg hover:shadow-xl"
                     onClick={handleDownload}
                   >
-                    Télécharger {images.length > 1 ? 'les images' : "l'image"}
+                    Télécharger {images.length > 1 ? 'les images' : "l&apos;image"}
                   </button>
                   {images.length > 1 && (
                     <button
@@ -819,7 +806,7 @@ export default function Home() {
             {showPresetsManager && (
               <PresetManager
                 customPresets={customPresets}
-                onEdit={handlePresetAction}
+                onEdit={(id) => handlePresetAction(id, 'edit')}
                 onDelete={(id) => handlePresetAction(id, 'delete')}
                 onClose={() => setShowPresetsManager(false)}
               />

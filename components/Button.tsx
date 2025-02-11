@@ -1,29 +1,38 @@
 import React from 'react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  tooltip?: string;
+  variant?: 'primary' | 'secondary' | 'danger';
+  size?: 'sm' | 'md' | 'lg';
+  children: React.ReactNode;
 }
 
-export function Button({ tooltip, children, ...props }: ButtonProps) {
+export function Button({ 
+  variant = 'primary', 
+  size = 'md', 
+  className = '', 
+  children, 
+  ...props 
+}: ButtonProps) {
+  const baseStyles = "inline-flex items-center justify-center font-medium transition-colors rounded-xl";
+  
+  const variantStyles = {
+    primary: "bg-primary hover:bg-primary-dark text-white shadow-lg hover:shadow-xl",
+    secondary: "bg-background border border-default hover:bg-surface text-text",
+    danger: "bg-red-500 hover:bg-red-600 text-white shadow-lg hover:shadow-xl"
+  };
+
+  const sizeStyles = {
+    sm: "px-3 py-1.5 text-sm",
+    md: "px-4 py-2 text-sm",
+    lg: "px-6 py-3 text-base"
+  };
+
   return (
-    <div className="relative group">
-      <button {...props}>
-        {children}
-      </button>
-      {tooltip && (
-        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-black text-white text-xs rounded p-2 whitespace-nowrap">
-          {tooltip}
-        </div>
-      )}
-    </div>
+    <button
+      className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+      {...props}
+    >
+      {children}
+    </button>
   );
-}
-
-// Utilisation dans pages/index.tsx
-<Button
-  className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-full"
-  onClick={applyDimensions}
-  tooltip="Ctrl/Cmd + A"
->
-  Appliquer les dimensions
-</Button> 
+} 

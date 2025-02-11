@@ -14,7 +14,7 @@ export function ZoomView({ original, optimized, position, sliderPosition }: Zoom
 
   return (
     <div 
-      className="absolute w-[200px] h-[200px] rounded-full overflow-hidden border-2 border-white shadow-lg pointer-events-none"
+      className="absolute w-[200px] h-[200px] rounded-full overflow-hidden border-2 border-white shadow-xl pointer-events-none backdrop-blur-sm"
       style={{
         left: `${position.x}%`,
         top: `${position.y}%`,
@@ -54,11 +54,11 @@ export function ZoomView({ original, optimized, position, sliderPosition }: Zoom
         style={{ left: `${sliderPosition}%` }}
       />
 
-      {/* Croix centrale */}
+      {/* Croix centrale avec style amélioré */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-          <div className="w-4 h-px bg-white/50"></div>
-          <div className="h-4 w-px bg-white/50 -mt-[1px]"></div>
+          <div className="w-4 h-px bg-white/70 shadow-sm"></div>
+          <div className="h-4 w-px bg-white/70 shadow-sm -mt-[1px]"></div>
         </div>
       </div>
     </div>

@@ -1,23 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 @tailwind base;
-@tailwind components;
 @tailwind utilities;
+@tailwind components;
 
 :root {
+  /* Thème clair par défaut */
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --secondary: #1e293b;
+  --accent: #818cf8;
   --background: #ffffff;
-  --foreground: #171717;
+  --text: #1e293b;
+  --text-light: #64748b;
+  --border: #e5e7eb;
+  --surface: #f9fafb;
+  --surface-hover: #f3f4f6;
+  --surface-secondary: #f3f4f6;
+  --surface-tertiary: #f9fafb;
+  --ring: rgba(99, 102, 241, 0.2);
+  --scrollbar: #E5E7EB;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Thème sombre */
+.dark {
+  --background: #0f172a;
+  --text: #f8fafc;
+  --text-light: #94a3b8;
+  --border: #1f2937;
+  --surface: #1e293b;
+  --surface-hover: #334155;
+  --surface-secondary: #1e293b;
+  --surface-tertiary: #0f172a;
+  --ring: rgba(99, 102, 241, 0.1);
+  --scrollbar: #4B5563;
 }
 
+/* Styles de base */
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--background);
+  color: var(--text);
+}
+
+/* Styles communs */
+.bg-surface {
+  background-color: var(--surface);
+}
+
+.border-default {
+  border-color: var(--border);
+}
+
+/* Ajustements pour les composants spécifiques */
+.sidebar {
+  background-color: var(--background);
+  border-color: var(--border);
+}
+
+.card {
+  background-color: var(--surface);
+  border-color: var(--border);
 }
 
 .fade-enter {
@@ -36,4 +79,37 @@ body {
   opacity: 0;
   transform: translateY(10px);
   transition: opacity 300ms, transform 300ms;
+}
+
+/* Ajoutez ces styles pour une scrollbar personnalisée */
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar);
+    border-radius: 3px;
+  }
+}
+
+/* Ajoutons des classes utilitaires */
+.bg-surface-secondary {
+  background-color: var(--surface-secondary);
+}
+
+.bg-surface-tertiary {
+  background-color: var(--surface-tertiary);
+}
+
+.ring-theme {
+  --tw-ring-color: var(--ring);
 }

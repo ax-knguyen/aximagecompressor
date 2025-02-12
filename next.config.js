@@ -7,6 +7,12 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  distDir: 'apps/image-compressor',
+  basePath: '/apps/image-compressor',
+  assetPrefix: '/apps/image-compressor/',
+  env: {
+    NEXT_PUBLIC_API_URL: '/apps/image-compressor',
+  },
 }
 
 module.exports = nextConfig 

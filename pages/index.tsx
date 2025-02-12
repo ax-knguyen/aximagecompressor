@@ -1,17 +1,21 @@
 import { useState, useEffect, useCallback } from 'react';
 import DropZone from '../components/DropZone';
 import ImageTable from '../components/ImageTable';
-import { Geist } from "next/font/google";
+import { Inter } from "next/font/google";
 import JSZip from 'jszip';
 import { usePresets } from '../hooks/usePresets';
 import { PresetManager } from '../components/PresetManager';
 import { ThemeSwitch } from '../components/ThemeSwitch';
 import { Button } from '../components/Button';
 import type { ImageSettings } from '../types/settings';
+import imageCompression from 'browser-image-compression';
 
-const geist = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin", "latin-ext"],
+  display: 'swap',
+  preload: true,
+  weight: ['400', '500', '600', '700'],
 });
 
 interface ImageInfo {
@@ -28,22 +32,22 @@ interface ImageInfo {
 const formatInfo = {
   webp: {
     name: 'WebP',
-    description: 'Format moderne recommandé pour le web. Excellent compromis entre qualité et compression. Compatible avec tous les navigateurs modernes.',
+    description: "Format moderne recommandé pour le web. Excellent compromis entre qualité et compression. Compatible avec tous les navigateurs modernes.",
     bestFor: 'Sites web, applications web',
   },
   avif: {
     name: 'AVIF',
-    description: 'Format nouvelle génération offrant la meilleure compression. Support limité aux navigateurs récents.',
+    description: "Format nouvelle génération offrant la meilleure compression. Support limité aux navigateurs récents.",
     bestFor: 'Applications modernes nécessitant une compression maximale',
   },
   jpeg: {
     name: 'JPEG',
-    description: 'Format universel, idéal pour les photos. Compression avec perte mais très compatible.',
+    description: "Format universel, idéal pour les photos. Compression avec perte mais très compatible.",
     bestFor: 'Photos, images avec beaucoup de couleurs',
   },
   png: {
     name: 'PNG',
-    description: 'Format sans perte, parfait pour les images avec transparence ou texte.',
+    description: "Format sans perte, parfait pour les images avec transparence ou texte.",
     bestFor: 'Logos, icônes, captures d\'écran',
   },
 };
@@ -204,42 +208,29 @@ export default function Home() {
 
   const optimizeImage = useCallback(async (file: File, id: string) => {
     try {
-      const base64 = await new Promise<string>((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const base64String = reader.result as string;
-          resolve(base64String.split(',')[1]);
-        };
-        reader.readAsDataURL(file);
-      });
+      const options = {
+        maxSizeMB: 10,
+        maxWidthOrHeight: settings.width || 1920,
+        useWebWorker: true,
+        fileType: `image/${settings.format}`,
+        quality: settings.quality / 100,
+      };
 
-      const response = await fetch('/api/optimize', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          image: base64,
-          settings: {
-            ...settings,
-            width: settings.width || undefined,
-            height: settings.height || undefined,
-            quality: Math.max(1, Math.min(100, settings.quality))
-          },
-        }),
-      });
+      const compressedFile = await imageCompression(file, options);
+      const base64 = await imageCompression.getDataUrlFromFile(compressedFile);
 
-      if (!response.ok) throw new Error('Optimisation échouée');
-
-      const data = await response.json();
-      
       setImages(prev => prev.map(img => 
         img.id === id 
-          ? { ...img, optimizedSize: data.size, status: 'completed' as const, optimizedImage: data.optimizedImage }
+          ? { 
+              ...img, 
+              optimizedSize: compressedFile.size, 
+              status: 'completed' as const, 
+              optimizedImage: base64.split(',')[1] 
+            }
           : img
       ));
 
-      return data.optimizedImage;
+      return base64;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Erreur inconnue";
       setImages(prev => prev.map(img => 
@@ -430,7 +421,7 @@ export default function Home() {
   }, [toggleSidebar, handleDownload, applyDimensions]);
 
   return (
-    <div className={`${geist.variable} min-h-screen bg-background`}>
+    <div className={`${inter.variable} min-h-screen bg-background`}>
       <button
         onClick={toggleSidebar}
         className="fixed top-6 right-6 z-[60] p-2 bg-background border border-default rounded-xl hover:bg-surface transition-colors"
